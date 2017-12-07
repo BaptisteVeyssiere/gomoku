@@ -1,5 +1,0 @@
-C:/Users/Mido/source/repos/gomoku/build/Debug_x86/CMakeFiles/edit_cache.dir
-C:/Users/Mido/source/repos/gomoku/build/Debug_x86/CMakeFiles/rebuild_cache.dir
-C:/Users/Mido/source/repos/gomoku/build/Debug_x86/gomoku/CMakeFiles/gomoku.dir
-C:/Users/Mido/source/repos/gomoku/build/Debug_x86/gomoku/CMakeFiles/edit_cache.dir
-C:/Users/Mido/source/repos/gomoku/build/Debug_x86/gomoku/CMakeFiles/rebuild_cache.dir

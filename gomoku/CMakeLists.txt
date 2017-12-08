@@ -1,4 +1,6 @@
-add_executable(
-    gomoku 
-        "src/gomoku.cpp"
-)
+file(GLOB SOURCES "src/*.cpp")
+file(GLOB HEADERS "include/*.h")
+
+include_directories(include)
+
+add_executable(gomoku ${SOURCES} ${HEADERS})

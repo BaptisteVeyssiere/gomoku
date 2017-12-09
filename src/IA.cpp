@@ -96,13 +96,18 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 	return (turn);
 }
 
-std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>> const & board) {
+std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	std::vector<std::pair<int, int>>	possibleMoves;
 	std::pair<int, int>					bestMove;
 	int									maxWin = 0;
 	int									tmp = 0;
 
 	possibleMoves = this->checkPossibleMoves(board);
+	if (possibleMoves.size() == 0)
+	{
+		board[5][5] = Tile::OWN;
+		return (std::string("5,5"));
+	}
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
 		tmp = 0;

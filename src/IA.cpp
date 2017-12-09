@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 #include "IA.h"
 
 Gomoku::IA::IA() {
-	std::srand(time(0));
+	std::srand(static_cast<unsigned int>(std::time(0)));
 }
 
 Gomoku::IA::~IA() {}
@@ -44,25 +45,25 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	if (row == 5)
 		return (true);
 	tmp = lastPos;
-	while (++tmp.first < tmpBoard.size() && ++tmp.second < tmpBoard.size() && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < static_cast<int>(tmpBoard.size()) && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	row = 1;
-	while (--tmp.first >= 0 && ++tmp.second < tmpBoard.size() && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (--tmp.first >= 0 && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
-	while (++tmp.first < tmpBoard.size() && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < static_cast<int>(tmpBoard.size()) && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	row = 1;
-	while (++tmp.first < tmpBoard.size() && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	while (--tmp.first >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	row = 1;
-	while (++tmp.second < tmpBoard.size() && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	while (--tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
@@ -101,7 +102,7 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>> const & boar
 	int									tmp = 0;
 
 	possibleMoves = this->checkPossibleMoves();
-	for (int i = 0; i < possibleMoves.size(); ++i)
+	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
 		tmp = 0;
 		for (int j = 0; j < 1500; ++j)

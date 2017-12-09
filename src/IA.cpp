@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <ctime>
 #include "IA.h"
@@ -81,7 +82,7 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 
 	while (!isGameFinished(lastPos, tmpBoard, turn))
 	{
-		possibleMoves = this->checkPossibleMoves();
+		possibleMoves = this->checkPossibleMoves(tmpBoard);
 		lastPos = possibleMoves[std::rand() % possibleMoves.size()];
 		if (turn == 0) {
 			turn = 1;
@@ -101,7 +102,7 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>> const & boar
 	int									maxWin = 0;
 	int									tmp = 0;
 
-	possibleMoves = this->checkPossibleMoves();
+	possibleMoves = this->checkPossibleMoves(board);
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
 		tmp = 0;
@@ -137,4 +138,40 @@ std::string	Gomoku::IA::turn(std::vector<std::vector<Tile>> & board) {
 		return (std::to_string(board.size() / 2) + "," + std::to_string(board.size() / 2));
 	}
 	throw std::runtime_error("Impossible to play");
+}
+
+void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,
+									std::vector<std::pair<int, int>> &move, int y, int x)
+{
+
+	for (int i = y - 1; i < y + 2; i++)
+	{
+		if (i >= 0 && i < static_cast<int>(board.size()))
+		{
+			for (int j = x - 1; j < x + 2; j++)
+			{
+				if (j >= 0 && j < static_cast<int>(board[i].size()) && board[i][j] == Tile::EMPTY &&
+					std::find(move.begin(), move.end(), std::make_pair<int, int>(y - 1, x - 1)) == move.end())
+				{
+					move.push_back(std::make_pair(i, j));
+				}
+			}
+		}
+	}
+}
+
+std::vector<std::pair<int, int>>	Gomoku::IA::checkPossibleMoves(std::vector<std::vector<Tile>> const & board)
+{
+	std::vector<std::pair<int, int>> move;
+	for (int y = 0; y < static_cast<int>(board.size()); y++)
+	{
+		for (int x = 0; x < static_cast<int>(board[y].size()); x++)
+		{
+			if (board[y][x] != Tile::EMPTY)
+			{
+				getPossibleMoves(board, move, y, x);
+			}
+		}
+	}
+	return (move);
 }

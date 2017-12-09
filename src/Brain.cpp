@@ -18,7 +18,7 @@ void	Gomoku::Brain::start(std::vector<std::string> const & parameters) {
 		size = std::stoi(parameters[0]);
 	}
 	catch (std::invalid_argument const & e) {
-		throw std::runtime_error("Invalid parameter in START command");
+		throw std::runtime_error("Invalid parameter in START command : " + std::string(e.what()));
 	}
 	if (size < 15 || size > 20)
 	{
@@ -40,7 +40,7 @@ void	Gomoku::Brain::turn(std::vector<std::string> const & parameters) {
 		y = std::stoi(parameters[1]);
 	}
 	catch (std::invalid_argument const & e) {
-		throw std::runtime_error("Invalid parameter in BEGIN / TURN command");
+		throw std::runtime_error("Invalid parameter in BEGIN / TURN command : " + std::string(e.what()));
 	}
 	if (parameters[2] != "true" && parameters[2] != "false")
 		throw std::runtime_error("Invalid parameter in turn function");
@@ -51,7 +51,7 @@ void	Gomoku::Brain::turn(std::vector<std::string> const & parameters) {
 		}
 		this->board[y][x] = Tile::OPPONENT;
 	}
-	std::string coordinates = this->ia.turn(this->board);
+	std::string coordinates = this->ia.makeDecision(this->board);
 	this->stream.sendCommand(coordinates);
 }
 
@@ -84,7 +84,7 @@ void	Gomoku::Brain::makeBoard(std::vector<std::string> const & parameters) {
 		}
 		command = this->stream.getCommand();
 	}
-	std::string coordinates = this->ia.turn(this->board);
+	std::string coordinates = this->ia.makeDecision(this->board);
 	this->stream.sendCommand(coordinates);
 }
 

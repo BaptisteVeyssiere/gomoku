@@ -1,24 +1,26 @@
 #include <iostream>
+#include <algorithm>
 #include "CommandHandler.h"
 
-CommandHandler::CommandHandler() {}
+Gomoku::CommandHandler::CommandHandler() {}
 
-CommandHandler::~CommandHandler() {}
+Gomoku::CommandHandler::~CommandHandler() {}
 
-std::string	CommandHandler::getCommand() {
-	std::string	command = nullptr;
+std::string	Gomoku::CommandHandler::getCommand() const {
+	std::string	command = "";
 
 	try {
 		std::getline(std::cin, command);
+		std::replace(command.begin(), command.end(), ',', ' ');
 	}
-	catch (ios_base::failure const & e) {
+	catch (std::ios_base::failure const & e) {
 		throw std::runtime_error("Stream error in std::getline()");
 	}
 	return (command);
 }
 
-void	CommandHandler::sendCommand(std::string const & msg) {
-	if (msg != nullptr) {
-		std::cout << msg << std::endl;
+void	Gomoku::CommandHandler::sendCommand(std::string const & msg) const {
+	if (!msg.empty()) {
+		std::cout << msg << std::endl << std::flush;
 	}
 }

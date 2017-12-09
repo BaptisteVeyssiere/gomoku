@@ -1,10 +1,11 @@
+#include <iostream>
 #include "Brain.h"
 
 int	main(void) {
-	Brain	brain;
+	Gomoku::Brain	brain;
 
 	try {
-		if (!brain.tun())
+		if (!brain.run())
 			return (1);
 	}
 	catch (std::exception const & e) {

@@ -3,4 +3,4 @@ file(GLOB HEADERS "include/*.h")
 
 include_directories(include)
 
-add_executable(gomoku ${SOURCES} ${HEADERS})
+add_executable(pbrain-GodzIA ${SOURCES} ${HEADERS})

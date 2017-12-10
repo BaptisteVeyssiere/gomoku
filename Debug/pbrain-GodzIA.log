@@ -1,0 +1,7 @@
+﻿  main.cpp
+  IA.cpp
+  CommandHandler.cpp
+c:\users\baptiste\desktop\rendu\gomoku\src\commandhandler.cpp(16): warning C4101: 'e': unreferenced local variable
+  Brain.cpp
+  Generating Code...
+  pbrain-GodzIA.vcxproj -> C:\Users\baptiste\Desktop\rendu\gomoku\\pbrain-GodzIA.exe

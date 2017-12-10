@@ -11,29 +11,30 @@ Gomoku::IA::IA() {
 Gomoku::IA::~IA() {}
 
 bool	Gomoku::IA::isGameFinished(std::pair<int, int> const & lastPos, std::vector<std::vector<Tile>> const & tmpBoard, int turn) {
-	int	row = 1;
+	int					row = 1;
 	std::pair<int, int> tmp = lastPos;
 	Tile				check = turn == 1 ? Tile::OWN : Tile::OPPONENT;
+	int					size = static_cast<int>(tmpBoard.size());
 
 	while (--tmp.first >= 0 && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	tmp = lastPos;
-	while (++tmp.first < static_cast<int>(tmpBoard.size()) && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < size && ++tmp.second < size && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	row = 1;
 	tmp = lastPos;
-	while (--tmp.first >= 0 && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (--tmp.first >= 0 && ++tmp.second < size && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	tmp = lastPos;
-	while (++tmp.first < static_cast<int>(tmpBoard.size()) && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < size && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	row = 1;
 	tmp = lastPos;
-	while (++tmp.first < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.first < size && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	tmp = lastPos;
@@ -42,7 +43,7 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> const & lastPos, std::vector
 		return (true);
 	row = 1;
 	tmp = lastPos;
-	while (++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
+	while (++tmp.second < size && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
 	tmp = lastPos;
@@ -53,9 +54,9 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> const & lastPos, std::vector
 }
 
 int	Gomoku::IA::playGame(std::pair<int, int> const & pos, std::vector<std::vector<Tile>> tmpBoard) {
-	std::pair<int, int>	lastPos = pos;
+	std::pair<int, int>					lastPos = pos;
 	std::vector<std::pair<int, int>>	possibleMoves;
-	int					turn = 0;
+	int									turn = 0;
 
 	tmpBoard[pos.first][pos.second] = Tile::OWN;
 	if (isGameFinished(lastPos, tmpBoard, 1))
@@ -80,6 +81,7 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	std::pair<int, int>					bestMove;
 	int									maxWin = 0;
 	int									tmp = 0;
+	int									size;
 
 	possibleMoves = this->checkPossibleMoves(board);
 	if (possibleMoves.size() == 0)
@@ -87,10 +89,11 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 		board[board.size() / 2][board.size() / 2] = Tile::OWN;
 		return (std::string(std::to_string(board.size() / 2) + ',' + std::to_string(board.size() / 2)));
 	}
-	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
+	size = static_cast<int>(possibleMoves.size());
+	for (int i = 0; i < size; ++i)
 	{
 		tmp = 0;
-		for (unsigned int j = 0; j < 4500 / possibleMoves.size(); ++j)
+		for (int j = 0; j < 4500 / size; ++j)
 		{
 			tmp += playGame(possibleMoves[i], board);
 		}
@@ -107,13 +110,15 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,
 									std::vector<std::pair<int, int>> &move, int y, int x)
 {
+	int									size = static_cast<int>(board.size());
+
 	for (int i = y - 1; i < y + 2; ++i)
 	{
-		if (i >= 0 && i < static_cast<int>(board.size()))
+		if (i >= 0 && i < size)
 		{
 			for (int j = x - 1; j < x + 2; ++j)
 			{
-				if (j >= 0 && j < static_cast<int>(board[i].size()) && board[i][j] == Tile::EMPTY &&
+				if (j >= 0 && j < size && board[i][j] == Tile::EMPTY &&
 					std::find(move.begin(), move.end(), std::make_pair(i, j)) == move.end())
 				{
 					move.push_back(std::make_pair(i, j));
@@ -125,10 +130,12 @@ void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,
 
 std::vector<std::pair<int, int>>	Gomoku::IA::checkPossibleMoves(std::vector<std::vector<Tile>> const & board)
 {
-	std::vector<std::pair<int, int>> move;
-	for (int y = 0; y < static_cast<int>(board.size()); ++y)
+	std::vector<std::pair<int, int>>	move;
+	int									size = static_cast<int>(board.size());
+
+	for (int y = 0; y < size; ++y)
 	{
-		for (int x = 0; x < static_cast<int>(board[y].size()); ++x)
+		for (int x = 0; x < size; ++x)
 		{
 			if (board[y][x] != Tile::EMPTY)
 			{

@@ -61,6 +61,10 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 	int					turn = 0;
 
 	tmpBoard[pos.first][pos.second] = Tile::OWN;
+	if (isGameFinished(lastPos, tmpBoard, 1))
+		return (1);
+	else if (isGameFinished(lastPos, tmpBoard, 0))
+		return (1);
 
 	while (!isGameFinished(lastPos, tmpBoard, turn))
 	{
@@ -89,8 +93,8 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	possibleMoves = this->checkPossibleMoves(board);
 	if (possibleMoves.size() == 0)
 	{
-		board[5][5] = Tile::OWN;
-		return (std::string("5,5"));
+		board[board.size() / 2][board.size() / 2] = Tile::OWN;
+		return (std::string(std::to_string(board.size() / 2) + ',' + std::to_string(board.size() / 2)));
 	}
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
@@ -105,7 +109,8 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 			bestMove = possibleMoves[i];
 		}
 	}
-	return (std::string(std::to_string(bestMove.first) + "," + std::to_string(bestMove.second)));
+	board[bestMove.first][bestMove.second] = Tile::OWN;
+	return (std::string(std::to_string(bestMove.second) + "," + std::to_string(bestMove.first)));
 }
 
 void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,

@@ -34,12 +34,14 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	std::cout << "5" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
+	tmp = lastPos;
 	while (--tmp.first >= 0 && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "6" << std::endl;
 	if (row == 5)
 		return (true);
 	std::cout << "7" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
+	tmp = lastPos;
 	while (++tmp.first < static_cast<int>(tmpBoard.size()) && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "8" << std::endl;
 	if (row == 5)
@@ -47,12 +49,14 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	std::cout << "9" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
+	tmp = lastPos;
 	while (++tmp.first < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "10" << std::endl;
 	if (row == 5)
 		return (true);
 	std::cout << "11" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
+	tmp = lastPos;
 	while (--tmp.first >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "12" << std::endl;
 	if (row == 5)
@@ -60,12 +64,14 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	std::cout << "13" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
+	tmp = lastPos;
 	while (++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "14" << std::endl;
 	if (row == 5)
 		return (true);
 	std::cout << "15" << std::endl;
 	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
+	tmp = lastPos;
 	while (--tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	std::cout << "16" << std::endl;
 	if (row == 5)

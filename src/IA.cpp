@@ -10,14 +10,11 @@ Gomoku::IA::IA() {
 
 Gomoku::IA::~IA() {}
 
-bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::vector<Tile>> &tmpBoard, int turn) {
+bool	Gomoku::IA::isGameFinished(std::pair<int, int> const & lastPos, std::vector<std::vector<Tile>> const & tmpBoard, int turn) {
 	int	row = 1;
 	std::pair<int, int> tmp = lastPos;
-	Tile				check;
+	Tile				check = turn == 1 ? Tile::OWN : Tile::OPPONENT;
 
-	check = Tile::OPPONENT;
-	if (turn == 1)
-		check = Tile::OWN;
 	while (--tmp.first >= 0 && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
 	if (row == 5)
 		return (true);
@@ -55,7 +52,7 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	return (false);
 }
 
-int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>> tmpBoard) {
+int	Gomoku::IA::playGame(std::pair<int, int> const & pos, std::vector<std::vector<Tile>> tmpBoard) {
 	std::pair<int, int>	lastPos = pos;
 	std::vector<std::pair<int, int>>	possibleMoves;
 	int					turn = 0;
@@ -72,14 +69,8 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 		if (possibleMoves.size() == 0)
 			return (0);
 		lastPos = possibleMoves[std::rand() % possibleMoves.size()];
-		if (turn == 0) {
-			turn = 1;
-			tmpBoard[lastPos.first][lastPos.second] = Tile::OWN;
-		}
-		else {
-			turn = 0;
-			tmpBoard[lastPos.first][lastPos.second] = Tile::OPPONENT;
-		}
+		tmpBoard[lastPos.first][lastPos.second] = turn == 1 ? Tile::OPPONENT : Tile::OWN;
+		turn = (turn + 1) % 2;
 	}
 	return (turn);
 }
@@ -99,7 +90,7 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
 		tmp = 0;
-		for (int j = 0; j < 5400 / possibleMoves.size(); ++j)
+		for (unsigned int j = 0; j < 4500 / possibleMoves.size(); ++j)
 		{
 			tmp += playGame(possibleMoves[i], board);
 		}

@@ -14,7 +14,7 @@ std::string	Gomoku::CommandHandler::getCommand() const {
 		std::replace(command.begin(), command.end(), ',', ' ');
 	}
 	catch (std::ios_base::failure const & e) {
-		throw std::runtime_error("Stream error in std::getline()");
+		throw std::runtime_error(std::string("Stream error in std::getline() : ") + e.what());
 	}
 	return (command);
 }

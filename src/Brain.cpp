@@ -68,6 +68,7 @@ void	Gomoku::Brain::makeBoard(std::vector<std::string> const & parameters) {
 	}
 	while (command != "DONE") {
 		if (!command.empty()) {
+			sstream.clear();
 			sstream.str(command);
 			sstream >> x;
 			sstream >> y;
@@ -166,7 +167,7 @@ bool	Gomoku::Brain::run() {
 			}
 		}
 		catch (std::runtime_error const & e) {
-			this->stream.sendCommand(ERRORMSG);
+			this->stream.sendCommand(std::string(ERRORMSG) + ": " + e.what());
 			std::cerr << e.what() << std::endl;
 			return (false);
 		}

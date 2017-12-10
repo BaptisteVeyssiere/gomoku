@@ -84,6 +84,130 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 	return (turn);
 }
 
+
+bool	Gomoku::IA::checkHorizontal(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x) {
+	int					nbr = 1;
+	int					horizontal[4][2] = {
+		{ 0, 1 },
+		{ 0, 2 },
+		{ 0, 3 },
+		{ 0, 4 }
+	};
+
+	for (int i = 0; i < 4 && x + horizontal[0][i] < board.size(); ++i) {
+		if (board[y][x + horizontal[i][1]] == Tile::OPPONENT)
+			++nbr;
+		else if (board[y][x + horizontal[i][1]] == Tile::OWN)
+			return (false);
+	}
+	if (nbr == 3) {
+		for (int i = 0; i < 4 && x + horizontal[0][i] < board.size(); ++i)
+			if (board[y][x + horizontal[i][1]] == Tile::EMPTY) {
+				bestMove.first = y;
+				bestMove.second = x + horizontal[i][1];
+				return (true);
+			}
+	}
+	return (false);
+}
+
+bool	Gomoku::IA::checkVertical(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x) {
+	int					nbr = 1;
+	int					vertical[4][2] = {
+		{ 1, 0 },
+		{ 2, 0 },
+		{ 3, 0 },
+		{ 4, 0 }
+	};
+
+	for (int i = 0; i < 4 && y + vertical[i][0] < board.size(); ++i) {
+		if (board[y + vertical[i][0]][x] == Tile::OPPONENT)
+			++nbr;
+		else if (board[y + vertical[i][0]][x] == Tile::OWN)
+			return (false);
+	}
+	if (nbr == 3) {
+		for (int i = 0; i < 4 && y + vertical[i][0] < board.size(); ++i)
+			if (board[y + vertical[i][0]][x] == Tile::EMPTY) {
+				bestMove.first = y + vertical[i][0];
+				bestMove.second = x;
+				return (true);
+			}
+	}
+	return (false);
+}
+
+bool	Gomoku::IA::checkDiagRight(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x) {
+	int					nbr = 1;
+	int					diagRight[4][2] = {
+		{ 1, 1 },
+		{ 2, 2 },
+		{ 3, 3 },
+		{ 4, 4 }
+	};
+
+	for (int i = 0; i < 4 && y + diagRight[i][0] < board.size() && x + diagRight[i][1] < board.size(); ++i) {
+		if (board[y + diagRight[i][0]][x + diagRight[i][1]] == Tile::OPPONENT)
+			++nbr;
+		else if (board[y + diagRight[i][0]][x + diagRight[i][1]] == Tile::OWN)
+			return (false);
+	}
+	if (nbr == 3) {
+		for (int i = 0; i < 4 && y + diagRight[i][0] && x + diagRight[i][1] < board.size(); ++i)
+			if (board[y + diagRight[i][0]][x + diagRight[i][1]] == Tile::EMPTY) {
+				bestMove.first = y + diagRight[i][0];
+				bestMove.second = x + diagRight[i][1];
+				return (true);
+			}
+	}
+	return (false);
+}
+
+bool	Gomoku::IA::checkDiagLeft(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x) {
+	int					nbr = 1;
+	int					diagLeft[4][2] = {
+		{ 1, -1 },
+		{ 2, -2 },
+		{ 3, -3 },
+		{ 4, -4 }
+	};
+
+	for (int i = 0; i < 4 && y + diagLeft[i][0] < board.size() && x + diagLeft[i][1] >= 0; ++i) {
+		if (board[y + diagLeft[i][0]][x + diagLeft[i][1]] == Tile::OPPONENT)
+			++nbr;
+		else if (board[y + diagLeft[i][0]][x + diagLeft[i][1]] == Tile::OWN)
+			return (false);
+	}
+	if (nbr == 3) {
+		for (int i = 0; i < 4 && y + diagLeft[i][0] && x + diagLeft[i][1] >= 0; ++i)
+			if (board[y + diagLeft[i][0]][x + diagLeft[i][1]] == Tile::EMPTY) {
+				bestMove.first = y + diagLeft[i][0];
+				bestMove.second = x + diagLeft[i][1];
+				return (true);
+			}
+	}
+	return (false);
+}
+
+bool	Gomoku::IA::checkDangerousMove(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x) {
+	if (checkHorizontal(board, bestMove, y, x) ||
+		checkVertical(board, bestMove, y, x) ||
+		checkDiagRight(board, bestMove, y, x) ||
+		checkDiagLeft(board, bestMove, y, x))
+		return (true);
+	return (false);
+}
+
+bool	Gomoku::IA::cutDangerousMove(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove) {
+	for (int y = 0; y < board.size(); ++y) {
+		for (int x = 0; x < board.size(); ++x) {
+			if (board[y][x] == Tile::OPPONENT && checkDangerousMove(board, bestMove, y, x))
+				return (true);
+		}
+	}
+	return (false);
+}
+
 std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	std::vector<std::pair<int, int>>	possibleMoves;
 	std::pair<int, int>					bestMove;
@@ -95,6 +219,11 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	{
 		board[board.size() / 2][board.size() / 2] = Tile::OWN;
 		return (std::string(std::to_string(board.size() / 2) + ',' + std::to_string(board.size() / 2)));
+	}
+	if (cutDangerousMove(board, bestMove))
+	{
+		board[bestMove.first][bestMove.second] = Tile::OWN;
+		return (std::string(std::to_string(bestMove.second) + "," + std::to_string(bestMove.first)));
 	}
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{

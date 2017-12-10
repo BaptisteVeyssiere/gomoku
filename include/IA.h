@@ -15,6 +15,12 @@ namespace Gomoku {
 		std::string	makeDecision(std::vector<std::vector<Tile>>& board);
 		void	getPossibleMoves(std::vector<std::vector<Tile>> const & board, std::vector<std::pair<int, int>> &move, int y, int x);
 		std::vector<std::pair<int, int>>	checkPossibleMoves(std::vector<std::vector<Tile>> const & board);
+		bool	cutDangerousMove(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove);
+		bool	checkDangerousMove(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x);
+		bool	checkHorizontal(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x);
+		bool	checkVertical(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x);
+		bool	checkDiagRight(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x);
+		bool	checkDiagLeft(std::vector<std::vector<Tile>> const & board, std::pair<int, int> &bestMove, int y, int x);
 
 	};
 };

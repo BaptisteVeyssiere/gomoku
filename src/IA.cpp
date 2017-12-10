@@ -99,7 +99,7 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
 		tmp = 0;
-		for (int j = 0; j < 50; ++j)
+		for (int j = 0; j < 5400 / possibleMoves.size(); ++j)
 		{
 			tmp += playGame(possibleMoves[i], board);
 		}

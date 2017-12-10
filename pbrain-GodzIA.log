@@ -1,0 +1,19 @@
+______Process started______
+START 20
+OK
+INFO max_memory 83886080
+INFO timeout_match 180000
+INFO timeout_turn 5000
+INFO game_type 1
+INFO rule 0
+INFO time_left 179870
+INFO folder C:\ProgramData
+BEGIN
+5,5
+INFO time_left 179838
+TURN 4,5
+6,4
+INFO time_left 179521
+TURN 4,6
+4,5
+END

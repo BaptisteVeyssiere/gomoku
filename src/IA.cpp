@@ -116,11 +116,11 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,
 									std::vector<std::pair<int, int>> &move, int y, int x)
 {
-	for (int i = y - 1; i < y + 2; i++)
+	for (int i = y - 1; i < y + 2; ++i)
 	{
 		if (i >= 0 && i < static_cast<int>(board.size()))
 		{
-			for (int j = x - 1; j < x + 2; j++)
+			for (int j = x - 1; j < x + 2; ++j)
 			{
 				if (j >= 0 && j < static_cast<int>(board[i].size()) && board[i][j] == Tile::EMPTY &&
 					std::find(move.begin(), move.end(), std::make_pair(i, j)) == move.end())
@@ -135,9 +135,9 @@ void	Gomoku::IA::getPossibleMoves(std::vector<std::vector<Tile>> const & board,
 std::vector<std::pair<int, int>>	Gomoku::IA::checkPossibleMoves(std::vector<std::vector<Tile>> const & board)
 {
 	std::vector<std::pair<int, int>> move;
-	for (int y = 0; y < static_cast<int>(board.size()); y++)
+	for (int y = 0; y < static_cast<int>(board.size()); ++y)
 	{
-		for (int x = 0; x < static_cast<int>(board[y].size()); x++)
+		for (int x = 0; x < static_cast<int>(board[y].size()); ++x)
 		{
 			if (board[y][x] != Tile::EMPTY)
 			{

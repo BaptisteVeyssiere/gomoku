@@ -15,68 +15,43 @@ bool	Gomoku::IA::isGameFinished(std::pair<int, int> &lastPos, std::vector<std::v
 	std::pair<int, int> tmp = lastPos;
 	Tile				check;
 
-	std::cout << "1" << std::endl;
 	check = Tile::OPPONENT;
 	if (turn == 1)
 		check = Tile::OWN;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	while (--tmp.first >= 0 && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "2" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "3" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	tmp = lastPos;
 	while (++tmp.first < static_cast<int>(tmpBoard.size()) && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "4" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "5" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
 	tmp = lastPos;
 	while (--tmp.first >= 0 && ++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "6" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "7" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	tmp = lastPos;
 	while (++tmp.first < static_cast<int>(tmpBoard.size()) && --tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "8" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "9" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
 	tmp = lastPos;
 	while (++tmp.first < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "10" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "11" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	tmp = lastPos;
 	while (--tmp.first >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "12" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "13" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	row = 1;
 	tmp = lastPos;
 	while (++tmp.second < static_cast<int>(tmpBoard.size()) && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "14" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "15" << std::endl;
-	std::cout << "first = " << tmp.first << " second = " << tmp.second << std::endl;
 	tmp = lastPos;
 	while (--tmp.second >= 0 && tmpBoard[tmp.first][tmp.second] == check && ++row < 5);
-	std::cout << "16" << std::endl;
 	if (row == 5)
 		return (true);
-	std::cout << "17" << std::endl;
 	return (false);
 }
 
@@ -89,7 +64,6 @@ int	Gomoku::IA::playGame(std::pair<int, int> pos, std::vector<std::vector<Tile>>
 
 	while (!isGameFinished(lastPos, tmpBoard, turn))
 	{
-		//std::cout << "first : " << lastPos.first << " second : " << lastPos.second << std::endl;
 		possibleMoves = this->checkPossibleMoves(tmpBoard);
 		if (possibleMoves.size() == 0)
 			return (0);
@@ -120,9 +94,8 @@ std::string Gomoku::IA::makeDecision(std::vector<std::vector<Tile>>& board) {
 	}
 	for (int i = 0; i < static_cast<int>(possibleMoves.size()); ++i)
 	{
-		std::cout << i << " in " << possibleMoves.size() << std::endl;
 		tmp = 0;
-		for (int j = 0; j < 500; ++j)
+		for (int j = 0; j < 50; ++j)
 		{
 			tmp += playGame(possibleMoves[i], board);
 		}

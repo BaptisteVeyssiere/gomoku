@@ -1,1 +1,23 @@
-﻿
+﻿  Brain.cpp
+  CommandHandler.cpp
+  IA.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.11.25503\include\utility(188): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  src\IA.cpp(360): note: see reference to function template instantiation 'std::pair<int,std::pair<int,int>>::pair<double&,_Ty2&,void,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Ty2=std::pair<int,int>,
+              _Other1=double &,
+              _Other2=std::pair<int,int> &
+          ]
+  src\IA.cpp(360): note: see reference to function template instantiation 'std::pair<int,std::pair<int,int>>::pair<double&,_Ty2&,void,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Ty2=std::pair<int,int>,
+              _Other1=double &,
+              _Other2=std::pair<int,int> &
+          ]
+  main.cpp
+  Generating code
+  All 940 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  pbrain-GodzIA.vcxproj -> C:\Users\baptiste\Desktop\rendu\gomoku\\pbrain-GodzIA.exe

@@ -12,6 +12,7 @@ namespace Gomoku {
 	private:
 		Board	tmpBoard;
 		int		turn;
+		int		depth;
 	public:
 		IA();
 		~IA();
@@ -21,11 +22,11 @@ namespace Gomoku {
 		std::vector<ScoredPosition>	checkPossibleMoves();
 		void						getPossibleMoves(std::vector<ScoredPosition> &move, int y, int x);
 
-		std::vector<int>	countPossibilities(Tile const & player);
-		void	getHorizontalPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
-		void	getVerticalPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
-		void	getDiagLPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
-		void	getDiagRPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
+		int	countPossibilities(Tile const & player);
+		int	getHorizontalPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
+		int	getVerticalPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
+		int	getDiagLPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
+		int	getDiagRPossibilities(Tile const & player, std::vector<int> &count, std::pair<int, int> const &pos);
 
 		double	minMove(int depth, double alpha, double beta, ScoredPosition &move);
 		double	maxMove(int depth, double alpha, double beta, ScoredPosition &move);

@@ -4,7 +4,8 @@
 #include <ctime>
 #include "IA.h"
 
-Gomoku::IA::IA() {
+Gomoku::IA::IA()
+	: depth(3) {
 	std::srand(static_cast<unsigned int>(std::time(0)));
 }
 
@@ -92,174 +93,159 @@ std::vector<Gomoku::ScoredPosition>	Gomoku::IA::checkPossibleMoves()
 }
 
 double	Gomoku::IA::evaluate() {
-	std::vector<int>	counts = this->countPossibilities(Tile::OWN);
-	std::vector<int>	opponent = this->countPossibilities(Tile::OPPONENT);
-	double				score;
+	double				score = 0;
 
-	score = counts[0] * 100 + counts[1] * 5 + counts[2] * 1;
-	score -= counts[0] * 50;
+	score -= this->countPossibilities(Tile::OPPONENT);
+	score += (this->countPossibilities(Tile::OWN) / 2);
 	return (score);
 }
 
-void				Gomoku::IA::getHorizontalPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
-{
-	int					sizeX = static_cast<int>(this->tmpBoard[0].size());
+int			Gomoku::IA::getHorizontalPossibilities(Tile const &player, std::vector<int> &count, std::pair<int, int> const &pos) {
 	int y = pos.first;
 	int x = pos.second;
-	int lVoid = 0;
-	int lFill = 0;
-	int sVoid = 0;
+	int	consecutive = 1;
+	int	open = 0;
+	int size = this->tmpBoard[0].size();
 
-	while (x >= 0 && x >= pos.second - 4)
-	{
-		if (this->tmpBoard[y][x] == player)
-			++lFill;
-		else if (this->tmpBoard[y][x] == Tile::EMPTY)
-			++lVoid;
-		else
-			break;
-		--x;
+	if (x - 1 >= 0 && this->tmpBoard[y][x - 1] == Tile::EMPTY)
+		open = 1;
+	else if (x - 1 >= 0 && this->tmpBoard[y][x - 1] == player)
+		return (0);
+
+	while (++x < size && tmpBoard[y][x] == player) {
+		++consecutive;
 	}
-	x = pos.second;
-	while (x < sizeX && x <= pos.second + 4 && this->tmpBoard[y][x] == Tile::EMPTY)
-	{
-		++sVoid;
-		++x;
+	if (x < size && tmpBoard[y][x] == Tile::EMPTY)
+		++open;
+	
+	if (consecutive == 5 || (consecutive == 4 && open == 2))
+		return (10000);
+	else if (consecutive < 3 || open == 0)
+		return (0);
+	if (consecutive == 3 && open == 2) {
+		return (1000);
 	}
-	if (lFill >= 2 && sVoid + lVoid + lFill >= 5)
-	{
-		sVoid = 5 - lFill;
-		if (sVoid == 1)
-			++count[0];
-		else if (sVoid == 2)
-			++count[1];
-		else
-			++count[2];
+	if (consecutive == 4 && open == 1) {
+		return (200);
 	}
+	if (consecutive == 3 && open == 1) {
+		return (100);
+	}
+	else if (consecutive == 4 && open == 1) {
+		return (1050);
+	}
+	return (0);
 }
 
-void				Gomoku::IA::getVerticalPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
+int				Gomoku::IA::getVerticalPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
 {
-	int					sizeY = static_cast<int>(this->tmpBoard.size());
 	int y = pos.first;
 	int x = pos.second;
-	int uVoid = 0;
-	int uFill = 0;
-	int sVoid = 0;
+	int	consecutive = 1;
+	int	open = 0;
+	int size = this->tmpBoard[0].size();
 
-	while (y >= 0 && y >= pos.first - 4)
-	{
-		if (this->tmpBoard[y][x] == player)
-			++uFill;
-		else if (this->tmpBoard[y][x] == Tile::EMPTY)
-			++uVoid;
-		else
-			break;
-		--y;
+	if (y - 1 >= 0 && this->tmpBoard[y - 1][x] == Tile::EMPTY)
+		open = 1;
+	else if (y - 1 >= 0 && this->tmpBoard[y - 1][x] == player)
+		return (0);
+
+	while (++y < size && tmpBoard[y][x] == player) {
+		++consecutive;
 	}
-	y = pos.first;
-	while (y < sizeY && y <= pos.first + 4 && this->tmpBoard[y][x] == Tile::EMPTY)
-	{
-		++sVoid;
-		++y;
+	if (y < size && tmpBoard[y][x] == Tile::EMPTY)
+		++open;
+
+	if (consecutive == 5 || (consecutive == 4 && open == 2))
+		return (10000);
+	else if (consecutive < 3 || open == 0)
+		return (0);
+	else if (consecutive == 3 && open == 2) {
+		return (1000);
 	}
-	if (uFill >= 2 && sVoid + uVoid + uFill >= 5)
-	{
-		sVoid = 5 - uFill;
-		if (sVoid == 1)
-			++count[0];
-		else if (sVoid == 2)
-			++count[1];
-		else
-			++count[2];
+	else if (consecutive == 3 && open == 1) {
+		return (100);
 	}
+	else if (consecutive == 4 && open == 1) {
+		return (1050);
+	}
+	return (0);
 }
 
-void				Gomoku::IA::getDiagLPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
+int				Gomoku::IA::getDiagLPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
 {
-	int	sizeY = static_cast<int>(this->tmpBoard.size());
-	int	sizeX = static_cast<int>(this->tmpBoard[0].size());
 	int y = pos.first;
 	int x = pos.second;
-	int dVoid = 0;
-	int dFill = 0;
-	int sVoid = 0;
+	int	consecutive = 1;
+	int	open = 0;
+	int size = this->tmpBoard[0].size();
 
-	while (y >= 0 && y >= pos.first - 4 && x >= 0 && x >= pos.second - 4)
-	{
-		if (this->tmpBoard[y][x] == player)
-			++dFill;
-		else if (this->tmpBoard[y][x] == Tile::EMPTY)
-			++dVoid;
-		else
-			break;
-		--y;
-		--x;
+	if (y - 1 >= 0 && x + 1 < size && this->tmpBoard[y - 1][x + 1] == Tile::EMPTY)
+		open = 1;
+	else if (y - 1 >= 0 && x + 1 < size && this->tmpBoard[y - 1][x + 1] == player)
+		return (0);
+
+	while (++y < size && --x >= 0 && tmpBoard[y][x] == player) {
+		++consecutive;
 	}
-	y = pos.first;
-	x = pos.second;
-	while (y < sizeY && y <= pos.first + 4 && x < sizeX && x <= pos.second + 4 && this->tmpBoard[y][x] == Tile::EMPTY)
-	{
-		++sVoid;
-		++y;
-		++x;
+	if (y < size && x >= 0 && tmpBoard[y][x] == Tile::EMPTY)
+		++open;
+
+	if (consecutive == 5 || (consecutive == 4 && open == 2))
+		return (10000);
+	else if (consecutive < 3 || open == 0)
+		return (0);
+	if (consecutive == 3 && open == 2) {
+		return (1000);
 	}
-	if (dFill >= 2 && sVoid + dVoid + dFill >= 5)
-	{
-		sVoid = 5 - dFill;
-		if (sVoid == 1)
-			++count[0];
-		else if (sVoid == 2)
-			++count[1];
-		else
-			++count[2];
+	if (consecutive == 3 && open == 1) {
+		return (100);
 	}
+	else if (consecutive == 4 && open == 1) {
+		return (1050);
+	}
+	return (0);
 }
 
-void				Gomoku::IA::getDiagRPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
+int				Gomoku::IA::getDiagRPossibilities(Tile const & player, std::vector<int> & count, std::pair<int, int> const & pos)
 {
-	int					sizeY = static_cast<int>(this->tmpBoard.size());
-	int					sizeX = static_cast<int>(this->tmpBoard[0].size());
 	int y = pos.first;
 	int x = pos.second;
-	int dVoid = 0;
-	int dFill = 0;
-	int sVoid = 0;
+	int	consecutive = 1;
+	int	open = 0;
+	int size = this->tmpBoard[0].size();
 
-	while (y >= 0 && y >= pos.first - 4 && x < sizeX && x <= pos.second + 4)
-	{
-		if (this->tmpBoard[y][x] == player)
-			++dFill;
-		else if (this->tmpBoard[y][x] == Tile::EMPTY)
-			++dVoid;
-		else
-			break;
-		--y;
-		++x;
+	if (y - 1 >= 0 && x - 1 >= 0 && this->tmpBoard[y - 1][x - 1] == Tile::EMPTY)
+		open = 1;
+	else if (y - 1 >= 0 && x - 1 >= 0  && this->tmpBoard[y - 1][x - 1] == player)
+		return (0);
+
+	while (++y < size && ++x < size && tmpBoard[y][x] == player) {
+		++consecutive;
 	}
-	y = pos.first;
-	x = pos.second;
-	while (y < sizeY && y <= pos.first + 4 && x >= 0 && x >= pos.second - 4 && this->tmpBoard[y][x] == Tile::EMPTY)
-	{
-		++sVoid;
-		++y;
-		--x;
+	if (y < size && x < size && tmpBoard[y][x] == Tile::EMPTY)
+		++open;
+
+	if (consecutive == 5 || (consecutive == 4 && open == 2))
+		return (10000);
+	else if (consecutive < 3 || open == 0)
+		return (0);
+	if (consecutive == 3 && open == 2) {
+		return (1000);
 	}
-	if (dFill >= 2 && sVoid + dVoid + dFill >= 5)
-	{
-		sVoid = 5 - dFill;
-		if (sVoid == 1)
-			++count[0];
-		else if (sVoid == 2)
-			++count[1];
-		else
-			++count[2];
+	if (consecutive == 3 && open == 1) {
+		return (100);
 	}
+	else if (consecutive == 4 && open == 1) {
+		return (1050);
+	}
+	return (0);
 }
 
-std::vector<int>	Gomoku::IA::countPossibilities(Tile const & player)
+int		Gomoku::IA::countPossibilities(Tile const & player)
 {
 	std::vector<int>	count(3, 0);
+	int					score = 0;
 	int					sizeY = static_cast<int>(this->tmpBoard.size());
 	int					sizeX = static_cast<int>(this->tmpBoard[0].size());
 
@@ -270,14 +256,14 @@ std::vector<int>	Gomoku::IA::countPossibilities(Tile const & player)
 		{
 			if (this->tmpBoard[y][x] == player)
 			{
-				getHorizontalPossibilities(player, count, std::make_pair(y, x));
-				getVerticalPossibilities(player, count, std::make_pair(y, x));
-				getDiagLPossibilities(player, count, std::make_pair(y, x));
-				getDiagRPossibilities(player, count, std::make_pair(y, x));
+				score += getHorizontalPossibilities(player, count, std::make_pair(y, x));
+				score += getVerticalPossibilities(player, count, std::make_pair(y, x));
+				score += getDiagLPossibilities(player, count, std::make_pair(y, x));
+				score += getDiagRPossibilities(player, count, std::make_pair(y, x));
 			}
 		}
 	}
-	return (count);
+	return (score);
 }
 
 double		Gomoku::IA::maxMove(int depth, double alpha, double beta, ScoredPosition &move) {
@@ -287,7 +273,7 @@ double		Gomoku::IA::maxMove(int depth, double alpha, double beta, ScoredPosition
 	this->turn = (this->turn + 1) % 2;
 	if (depth == 0 || isGameFinished(move.second)) {
 		best = this->evaluate();
-		best += depth == 0 ? 0 : 10000;
+		best -= depth == 0 ? 0 : 10000;
 	}
 	else {
 		best = -std::numeric_limits<double>::infinity();
@@ -338,9 +324,11 @@ double		Gomoku::IA::minMove(int depth, double alpha, double beta, ScoredPosition
 std::string Gomoku::IA::makeDecision(Board& board) {
 	std::vector<ScoredPosition>	moves;
 	int							size;
+	bool						warning = false;
 	double						score;
-	int							depth = 4;
+	int							depth = this->depth;
 	ScoredPosition				bestMove = { 0, {-1, -1} };
+	std::time_t					time_start = std::time(nullptr);
 
 	this->tmpBoard = board;
 	moves = this->checkPossibleMoves();
@@ -352,6 +340,10 @@ std::string Gomoku::IA::makeDecision(Board& board) {
 	}
 	else {
 		for (ScoredPosition move : moves) {
+			if (warning == false && std::difftime(std::time(nullptr), time_start) >= 3) {
+				this->depth -= 2;
+				warning = true;
+			}
 			this->turn = 0;
 			this->tmpBoard[move.second.first][move.second.second] = (this->turn == 1 ? Tile::OPPONENT : Tile::OWN);
 			score = this->minMove(depth, -std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), move);
@@ -361,6 +353,8 @@ std::string Gomoku::IA::makeDecision(Board& board) {
 			}
 		}
 	}
+	if (warning)
+		this->depth += 1;
 	board[bestMove.second.first][bestMove.second.second] = Tile::OWN;
 	return (std::string(std::to_string(bestMove.second.second) + "," + std::to_string(bestMove.second.first)));
 }

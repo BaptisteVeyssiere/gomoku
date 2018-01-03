@@ -340,9 +340,14 @@ std::string Gomoku::IA::makeDecision(Board& board) {
 	}
 	else {
 		for (ScoredPosition move : moves) {
-			if (warning == false && std::difftime(std::time(nullptr), time_start) >= 3) {
-				this->depth -= 2;
-				warning = true;
+			if (warning == false && std::difftime(std::time(nullptr), time_start) >= 2) {
+				if (this->depth == 3)
+				{
+					this->depth -= 2;
+					warning = true;
+				}
+				else if (this->depth == 2)
+					this->depth = 1;
 			}
 			this->turn = 0;
 			this->tmpBoard[move.second.first][move.second.second] = (this->turn == 1 ? Tile::OPPONENT : Tile::OWN);

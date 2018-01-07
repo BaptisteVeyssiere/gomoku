@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <algorithm>
 #include <string>
 #include <ctime>
@@ -328,7 +329,8 @@ std::string Gomoku::IA::makeDecision(Board& board) {
 	double						score;
 	int							depth = this->depth;
 	ScoredPosition				bestMove = { 0, {-1, -1} };
-	std::time_t					time_start = std::time(nullptr);
+	auto						start = std::chrono::system_clock::now();
+	std::chrono::duration<double>	diff;
 
 	this->tmpBoard = board;
 	moves = this->checkPossibleMoves();
@@ -340,7 +342,9 @@ std::string Gomoku::IA::makeDecision(Board& board) {
 	}
 	else {
 		for (ScoredPosition move : moves) {
-			if (warning == false && std::difftime(std::time(nullptr), time_start) >= 2) {
+			auto end = std::chrono::system_clock::now();
+			diff = end - start;
+			if (warning == false && diff.count() >= 2.0) {
 				if (this->depth == 3)
 				{
 					this->depth -= 2;
